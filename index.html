@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<meta name="referrer" content="no-referrer">
+<title>Intercambio de regalos</title>
+<style>
+  :root{--rojo:#b3261e;--rojo-osc:#8c1d18;--verde:#1f6f4a;--verde-claro:#e6f3ec;--tinta:#1f2328;--gris:#5f6670;--linea:#e3e5e8;--fondo:#faf7f2;--wa:#1da851}
+  *{box-sizing:border-box}
+  body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;color:var(--tinta);background:var(--fondo);line-height:1.45}
+  .wrap{max-width:820px;margin:0 auto;padding:20px 14px 40px}
+  header{text-align:center;margin-bottom:16px}
+  header h1{margin:0 0 6px;font-size:1.6rem;color:var(--rojo)}
+  header .sub{color:var(--gris);font-size:.95rem}
+  header .sub span{display:inline-block;margin:0 8px}
+  .card{background:#fff;border:1px solid var(--linea);border-radius:14px;padding:16px;margin-bottom:16px;box-shadow:0 1px 2px rgba(0,0,0,.04)}
+  .card h2{margin:0 0 12px;font-size:1.08rem}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px}
+  .full{grid-column:1/-1}
+  label.f{display:flex;flex-direction:column;gap:4px;font-size:.85rem;color:var(--gris)}
+  label.chk{display:flex;align-items:center;gap:8px;font-size:.92rem}
+  input,textarea{font:inherit;color:var(--tinta);border:1px solid #cfd3d8;border-radius:9px;padding:9px 10px;background:#fff;width:100%}
+  input[type=checkbox]{width:auto}
+  input:focus,textarea:focus{outline:2px solid #f0b9b5;border-color:var(--rojo)}
+  textarea{resize:vertical;min-height:64px}
+  button,.btn{font:inherit;cursor:pointer;border-radius:9px;padding:9px 14px;border:1px solid #cfd3d8;background:#fff;color:var(--tinta);text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:6px}
+  button:hover,.btn:hover{background:#f4f5f6}
+  button:disabled{opacity:.55;cursor:default}
+  .primary{background:var(--rojo);border-color:var(--rojo);color:#fff;font-weight:600}
+  .primary:hover{background:var(--rojo-osc)}
+  .wa{background:var(--wa);border-color:var(--wa);color:#fff;font-weight:600}
+  .wa:hover{background:#178a43}
+  .del{border:none;background:transparent;color:var(--rojo);padding:4px 8px;font-size:.85rem}
+  .del:hover{background:#fbeceb}
+  .link{border:none;background:none;color:var(--verde);text-decoration:underline;padding:0 4px;font-size:.85rem}
+  .btns{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+  .hint{color:var(--gris);font-size:.85rem;margin:6px 0}
+  .msg{border-radius:10px;padding:10px 12px;margin:10px 0;font-size:.92rem}
+  .msg.err{background:#fbeceb;color:var(--rojo-osc);border:1px solid #f0c7c4}
+  .msg.ok{background:var(--verde-claro);color:var(--verde);border:1px solid #bfe0cf}
+  .big-ok{text-align:center;padding:10px 0}
+  .big-ok .icon{font-size:2.6rem}
+  .p{border:1px solid var(--linea);border-radius:12px;padding:12px;margin-bottom:10px;background:#fffdfa}
+  .p.sent{background:var(--verde-claro);border-color:#bfe0cf}
+  .p-top{display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px;align-items:flex-start}
+  .p-top b{font-size:1rem}
+  .p small{color:var(--gris)}
+  .p ol{margin:6px 0 0;padding-left:20px;font-size:.9rem}
+  .p .grp{display:flex;align-items:center;gap:6px;font-size:.85rem;color:var(--gris);margin-top:8px}
+  .p .grp input{max-width:180px;padding:5px 8px}
+  .warn{color:var(--rojo);font-size:.8rem;font-weight:600}
+  .badge{font-size:.75rem;background:var(--verde);color:#fff;border-radius:20px;padding:2px 8px;margin-left:6px}
+  .pill{font-size:.78rem;border-radius:20px;padding:2px 9px;font-weight:600}
+  .pill.on{background:var(--verde-claro);color:var(--verde)}
+  .pill.off{background:#fbeceb;color:var(--rojo)}
+  .progress{height:8px;background:#eee;border-radius:8px;overflow:hidden;margin:6px 0 12px}
+  .progress div{height:100%;background:var(--verde)}
+  .urlbox{display:flex;gap:8px;flex-wrap:wrap}
+  .urlbox input{flex:1;min-width:220px;font-size:.85rem}
+  .loading{color:var(--gris);text-align:center;padding:30px 0}
+  .amigo{font-size:1.6rem;font-weight:700;color:var(--rojo);margin:6px 0}
+  .stats{display:flex;flex-wrap:wrap;gap:8px;margin:4px 0 12px}
+  .stat{background:#f4f5f6;border-radius:10px;padding:6px 10px;font-size:.85rem}
+  .stat b{font-size:1rem}
+  .wait{font-size:.85rem;color:var(--gris);border:1px dashed #cfd3d8;border-radius:9px;padding:8px 12px}
+  .done{font-size:.8rem;color:var(--verde);font-weight:600}
+  .acts{display:flex;flex-direction:column;gap:6px;align-items:flex-end}
+  .acts .line{display:flex;flex-wrap:wrap;gap:6px;align-items:center;justify-content:flex-end}
+  .small{padding:6px 10px;font-size:.85rem}
+  @media (max-width:620px){.acts{align-items:stretch}.acts .line{justify-content:flex-start}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1 id="titulo">🎁 Intercambio de regalos</h1>
+    <div class="sub" id="sub"></div>
+  </header>
+  <div id="app"><p class="loading">Cargando…</p></div>
+</div>
+
+<script>
+/* ================================================================
+   ÚNICO DATO QUE DEBES CAMBIAR:
+   Pega entre las comillas la URL de tu aplicación web de Apps Script
+   (Implementar → Gestionar implementaciones → URL, termina en /exec)
+   ================================================================ */
+var API = 'https://script.google.com/macros/s/AKfycbwsKuwarquUuRL1aLcSW3kggkK0GQUcauEez_Y3rosmVoGDxcnfBqMDlAZiDFkjYUUL/exec';
+
+(function(){
+  'use strict';
+  var app = document.getElementById('app');
+  var TOKEN = (new URLSearchParams(location.search).get('t') || '').replace(/[^A-Za-z0-9]/g, '');
+
+  function el(tag, cls, text){ var e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; }
+  function clear(n){ while (n.firstChild) n.removeChild(n.firstChild); }
+  function msg(type, text){ return el('div', 'msg ' + type, text); }
+  function button(text, cls){ var b = el('button', cls || '', text); b.type = 'button'; return b; }
+  function revisar(r){
+    if (!r.ok) throw new Error('No hay conexión con el servidor (' + r.status + ').');
+    return r.json().then(function(j){ if (!j || !j.ok) throw new Error((j && j.error) || 'Ocurrió un error.'); return j.data; });
+  }
+  function apiGet(params){
+    var q = Object.keys(params).map(function(k){ return encodeURIComponent(k) + '=' + encodeURIComponent(params[k]); }).join('&');
+    return fetch(API + '?' + q, { credentials: 'omit' }).then(revisar);
+  }
+  function apiPost(body){
+    // Se envía como texto simple para que funcione desde cualquier navegador sin pedir permisos extra
+    return fetch(API, { method: 'POST', credentials: 'omit', body: JSON.stringify(body) }).then(revisar);
+  }
+  function fmtBudget(b){
+    var t = String(b || '').trim(); if (!t) return '';
+    var n = Number(t.replace(/[$,\s]/g, '').replace(/mxn/i, ''));
+    return isFinite(n) && n > 0 ? '$' + n.toLocaleString('es-MX') + ' MXN' : t;
+  }
+  function setHeader(c){
+    document.getElementById('titulo').textContent = '🎁 ' + (c.nombre || 'Intercambio de regalos');
+    document.title = c.nombre || 'Intercambio de regalos';
+    var sub = document.getElementById('sub'); clear(sub);
+    if (c.fecha) sub.appendChild(el('span', '', '📅 ' + c.fecha));
+    if (fmtBudget(c.presupuesto)) sub.appendChild(el('span', '', '💰 ' + fmtBudget(c.presupuesto)));
+    if (c.lugar) sub.appendChild(el('span', '', '📍 ' + c.lugar));
+  }
+  function field(label, value, ph){
+    var w = el('label', 'f full'); w.appendChild(el('span', '', label));
+    var i = document.createElement('input'); i.type = 'text'; i.value = value || ''; i.maxLength = 200; if (ph) i.placeholder = ph;
+    w.appendChild(i); return { wrap: w, input: i };
+  }
+  function lista(ops){
+    var ol = el('ol');
+    ops.forEach(function(o){ if (String(o || '').trim()) ol.appendChild(el('li', '', o)); });
+    return ol;
+  }
+  function aviso(icon, title, text){
+    clear(app);
+    var c = el('div', 'card big-ok');
+    c.appendChild(el('div', 'icon', icon));
+    c.appendChild(el('h2', '', title));
+    if (text) c.appendChild(el('p', 'hint', text));
+    app.appendChild(c);
+  }
+
+  function cargar(){
+    if (API.indexOf('https://script.google.com/') !== 0) {
+      aviso('⚙️', 'Falta configurar la página', 'Quien organiza debe pegar la URL de su aplicación de Apps Script en el archivo index.html.');
+      return;
+    }
+    if (!TOKEN) {
+      apiGet({ api: 'info' }).then(function(info){
+        setHeader(info);
+        aviso('📩', 'Abre tu enlace personal', 'Quien organiza te enviará por WhatsApp un mensaje con tu amigo secreto y un enlace personal. Ábrelo para registrar tus tres opciones de regalo.');
+      }).catch(function(e){ aviso('⚠️', 'No se pudo cargar', e.message); });
+      return;
+    }
+    apiGet({ api: 'mi', t: TOKEN }).then(function(d){ render(d); })
+      .catch(function(e){ aviso('⚠️', e.message, 'Si el problema sigue, avisa a quien organiza.'); });
+  }
+
+  function render(d, nota){
+    setHeader(d.evento);
+    clear(app);
+
+    var c1 = el('div', 'card big-ok');
+    c1.appendChild(el('p', '', '¡Hola, ' + d.yo.nombre + '! 👋'));
+    if (d.amigo) {
+      c1.appendChild(el('p', 'hint', 'Tu amigo secreto es:'));
+      c1.appendChild(el('div', 'amigo', d.amigo.nombre + ' 🤫'));
+      c1.appendChild(el('p', 'hint', '¡Es secreto, no le digas a nadie!'));
+    } else {
+      c1.appendChild(el('p', 'hint', 'El sorteo todavía no se hace. Mientras, registra tus tres opciones de regalo.'));
+    }
+    app.appendChild(c1);
+
+    var c2 = el('div', 'card');
+    c2.appendChild(el('h2', '', '📝 Tus 3 opciones de regalo'));
+    var box = el('div');
+    if (nota) box.appendChild(msg('ok', nota));
+    if (d.evento.abierto) {
+      c2.appendChild(el('p', 'hint', 'Para que quien te regala sepa qué darte. Puedes incluir talla, color, tienda o un enlace. Si las cambias, también le llegarán las nuevas.'));
+      var g = el('div', 'grid');
+      var f = [0, 1, 2].map(function(k){
+        var x = field('Opción ' + (k + 1), d.yo.opciones[k], k === 0 ? 'Ej. Termo para café, color negro' : '');
+        g.appendChild(x.wrap); return x;
+      });
+      c2.appendChild(g);
+      c2.appendChild(box);
+      var b = el('div', 'btns'); var save = button(d.yo.registrado ? 'Actualizar mis opciones' : 'Guardar mis opciones', 'primary');
+      b.appendChild(save); c2.appendChild(b);
+      save.addEventListener('click', function(){
+        clear(box);
+        var v = f.map(function(x){ return x.input.value.trim(); });
+        if (v.some(function(s){ return !s; })) { box.appendChild(msg('err', 'Escribe tus tres opciones de regalo.')); return; }
+        var txt = save.textContent; save.disabled = true; save.textContent = 'Guardando…';
+        apiPost({ accion: 'guardar', t: TOKEN, op1: v[0], op2: v[1], op3: v[2] })
+          .then(function(nd){ render(nd, '¡Listo! Tus opciones quedaron guardadas. Quien te regala las recibirá por WhatsApp.'); })
+          .catch(function(e){ save.disabled = false; save.textContent = txt; box.appendChild(msg('err', e.message)); });
+      });
+    } else {
+      c2.appendChild(box);
+      if (d.yo.registrado) c2.appendChild(lista(d.yo.opciones));
+      c2.appendChild(el('p', 'hint', 'El registro de opciones ya cerró.' + (d.yo.registrado ? '' : ' No registraste opciones; comunícate con quien organiza.')));
+    }
+    app.appendChild(c2);
+
+    if (d.amigo) {
+      var c3 = el('div', 'card');
+      c3.appendChild(el('h2', '', '🎁 Lo que ' + d.amigo.nombre + ' quiere'));
+      if (d.amigo.registrado) {
+        c3.appendChild(lista(d.amigo.opciones));
+      } else {
+        c3.appendChild(el('div', 'wait', d.amigo.nombre + ' aún no registra sus opciones. Te llegarán por WhatsApp, o vuelve a abrir este enlace más tarde.'));
+        var b2 = el('div', 'btns'); var ref = button('↻ Revisar de nuevo');
+        ref.addEventListener('click', function(){ ref.disabled = true; ref.textContent = 'Revisando…'; cargar(); });
+        b2.appendChild(ref); c3.appendChild(b2);
+      }
+      app.appendChild(c3);
+    }
+  }
+
+  cargar();
+})();
+</script>
+</body>
+</html>
